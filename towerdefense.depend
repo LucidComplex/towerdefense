@@ -1,0 +1,63 @@
+# depslib dependency file v1.0
+1395858074 source:/home/tan/codes/towerdefense/main.cpp
+	"Game.h"
+
+1395858288 /home/tan/codes/towerdefense/Game.h
+	<SFML/Graphics.hpp>
+	"Player.h"
+	"Wave.h"
+	"Towers.h"
+	"Grid.h"
+	"env.h"
+
+1395834266 /home/tan/codes/towerdefense/Player.h
+	"Entity.h"
+
+1395830299 /home/tan/codes/towerdefense/Entity.h
+
+1395834341 /home/tan/codes/towerdefense/Wave.h
+	<vector>
+	"Creep.h"
+
+1395831948 /home/tan/codes/towerdefense/Creep.h
+	<SFML/Graphics.hpp>
+	"Entity.h"
+
+1395830731 /home/tan/codes/towerdefense/Towers.h
+	<vector>
+	"Tower.h"
+
+1395834391 /home/tan/codes/towerdefense/Tower.h
+	<SFML/Graphics.hpp>
+	"Entity.h"
+
+1395857619 source:/home/tan/codes/towerdefense/Game.cpp
+	"Game.h"
+	<iostream>
+
+1395834374 source:/home/tan/codes/towerdefense/Player.cpp
+	"Player.h"
+
+1395831972 source:/home/tan/codes/towerdefense/Creep.cpp
+	"Creep.h"
+
+1395832092 source:/home/tan/codes/towerdefense/Entity.cpp
+	"Entity.h"
+
+1395834350 source:/home/tan/codes/towerdefense/Wave.cpp
+	<iostream>
+	"Wave.h"
+
+1395858129 /home/tan/codes/towerdefense/Grid.h
+	<SFML/Graphics.hpp>
+	"env.h"
+
+1395857626 source:/home/tan/codes/towerdefense/Grid.cpp
+	<iostream>
+	"Grid.h"
+
+1395858186 /home/tan/codes/towerdefense/env.h
+
+1395858202 source:/home/tan/codes/towerdefense/env.cpp
+	"env.h"
+
