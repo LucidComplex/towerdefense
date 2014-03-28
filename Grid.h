@@ -1,5 +1,7 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "env.h"  //global vars
+#include "Maze.h"
 
 class Grid{
 public:
@@ -7,4 +9,5 @@ public:
   void setGrid(float, float);
   Grid();
   Grid(float, float);
+  Maze maze;
 };

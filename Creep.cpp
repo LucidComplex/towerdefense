@@ -1,4 +1,5 @@
 #include "Creep.h"
+#include "env.h"
 
 Creep::Creep(){
   speed=4;
@@ -6,6 +7,7 @@ Creep::Creep(){
   hp=10;
   gold=3;
   dmg=1;
+
 }
 
 Creep::Creep(int h, int g, int d, int i, int s){

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Wave.h"
+#include "env.h"
 
 bool Wave::populate_wave(){
   ///populates wave ONLY when wave is cleared
@@ -9,7 +10,7 @@ bool Wave::populate_wave(){
   else{
     int i=0;
     std::cout<<std::endl<<"New wave!"<<std::endl;
-    while(i<30){
+    while(i<WAVE_SIZE){
       Creep x;  //add some modifiers here later
       push_back(x);
       i++;
@@ -19,10 +20,11 @@ bool Wave::populate_wave(){
 }
 
 void Wave::kill(Creep &x){
-  erase(begin()+x.id);  //"kill" creep
 
-  //move id numbers to fill in killed creep
-  unsigned int i=0;
+  unsigned int eraseid=x.id;
+  //move id numbers to fill in killed creep before erase
+  erase(begin()+eraseid);  //"kill" creep
+  unsigned int i=eraseid+1;
   while(i<size()){
     at(i).id--;
     i++;
@@ -39,10 +41,14 @@ void Wave::creep_health_check(){
   while(i<size()){
     Creep &checkcreep=at(i);
     if(checkcreep.get_hp()<=0){
-      std::cout<<checkcreep.get_hp();
 //      player.gain_gold(checkcreep.get_gold());
       kill(checkcreep);
+      std::cout<<std::endl<<size();
     }
     i++;
   }
+}
+
+Wave::Wave(){
+  populate_wave();
 }

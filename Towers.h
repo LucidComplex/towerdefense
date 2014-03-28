@@ -4,6 +4,8 @@
 
 class Towers:public std::vector<Tower>{
 public:
-  void add_tower();
+  Towers();
   void add_tower(int);
+  void remove_tower();
+  int towerquantity;
 };
