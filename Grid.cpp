@@ -1,29 +1,8 @@
-#include <iostream>
 #include "Grid.h"
-
-using namespace std;
+#include "env.h"
 
 Grid::Grid(){
-  setGrid(1, 1);
-
-  //set path
-  int i;
-  maze.boundary[0][2]=false;
-  for(i=2; i>0; i--)
-    maze.boundary[1][i]=false;
-  maze.boundary[2][1]=false;
-  for(i=1; i<7; i++)
-    maze.boundary[3][i]=false;
-  maze.boundary[4][6]=false;
-  for(i=6; i>2; i--)
-    maze.boundary[5][i]=false;
-  for(i=6; i<11; i++)
-    maze.boundary[i][3]=false;
-  for(i=2; i>0; i--)
-    maze.boundary[10][i]=false;
-  for(i=11; i<13; i++)
-    maze.boundary[i][1]=false;
-
+  setGrid(WINDOW_X, WINDOW_Y);
 }
 
 Grid::Grid(float x, float y){
@@ -42,10 +21,17 @@ void Grid::setGrid(float x, float y){
       grid[i][j].setOutlineThickness(1.f);
       grid[i][j].setOutlineColor(sf::Color::Black);
       if(!maze.boundary[i][j])
-        grid[i][j].setFillColor(sf::Color::Green);
+        grid[i][j].setFillColor(sf::Color(0, 255, 0, 100));
       else
-        grid[i][j].setFillColor(sf::Color::Red);
+        grid[i][j].setFillColor(sf::Color(255, 0, 0, 100));
       grid[i][j].setOrigin(-0.5-(i*SPRITE_SIZE[width]), -0.5-(j*SPRITE_SIZE[height]));
     }
+  }
+}
+
+void Grid::draw(sf::RenderTarget &target, sf::RenderStates states) const{
+  for(int i=0; i<WINDOW_X/SPRITE_SIZE[width]; i++){
+    for(int j=0; j<WINDOW_Y/SPRITE_SIZE[height]; j++)
+      target.draw(grid[i][j]);
   }
 }

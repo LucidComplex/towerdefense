@@ -6,6 +6,6 @@ class Towers:public std::vector<Tower>{
 public:
   Towers();
   void add_tower(int);
-  void remove_tower();
+  void remove_tower(Tower &);
   int towerquantity;
 };

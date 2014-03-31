@@ -20,15 +20,18 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="mingw32_compiler" />
+				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="/usr/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="sfml-system-s" />
-					<Add library="sfml-window-s" />
-					<Add library="sfml-graphics-s" />
-					<Add library="sfml-audio-s" />
+					<Add library="sfml-graphics" />
+					<Add library="sfml-window" />
+					<Add library="sfml-system" />
+					<Add library="sfml-audio" />
+					<Add directory="/usr/i486-mingw32/lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -36,7 +39,6 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Block.h" />
 		<Unit filename="Creep.cpp" />
 		<Unit filename="Creep.h" />
 		<Unit filename="Entity.cpp" />
@@ -59,6 +61,8 @@
 		<Unit filename="env.cpp" />
 		<Unit filename="env.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="myImage.cpp" />
+		<Unit filename="myImage.h" />
 		<Unit filename="mySprite.cpp" />
 		<Unit filename="mySprite.h" />
 		<Extensions>

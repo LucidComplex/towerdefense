@@ -6,43 +6,53 @@
 #include "Towers.h"
 #include "Grid.h"
 #include "mySprite.h"
+#include "myImage.h"
+#include "myString.h"
 #include "env.h"  //global vars
 
 class Game{
 private:
   bool gameLoop();
+
   bool playing;
+  bool wavestart;
+  bool buildmode;
 
   //sfml window
   sf::RenderWindow window;
 
   //sfml text
   sf::Font font;
-  sf::Text __play;
 
   //entities
   Player player;
   Wave wave;
   Towers towers;
 
-  //sprites
+  //title sprite
   mySprite titlesprite;
+
+  //money text
+  sf::Text playergold;
 
   //image elements
   sf::Image image;
   sf::Texture texture;
 
   //background elements
-  sf::Sprite bg;
+  myImage bg;
 
   //start screen bg
-  sf::Sprite bgstartscreen;
-
-  //play button
-  sf::Sprite playbtn;
+  myImage bgstartscreen;
 
   //grid
   Grid grid;
+
+  //play button
+  mySprite playbutton;
+
+  //portal
+  mySprite portal;
 
   //for animation
   sf::Clock clock;
@@ -50,17 +60,16 @@ private:
   float keyframe;
   float framespeed;
 
+  //for creep
+  int creepspawndelay;
+
   //game functions
   void update();
   bool readEvents();
   void display();
   void updateSprites(mySprite &, int);
-  void setSprite(sf::Sprite &, char *);
-
-  std::vector<sf::Texture *> allocatedtextures;
 
 public:
   Game();
-  ~Game();
   void start();
 };

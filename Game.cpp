@@ -1,5 +1,5 @@
-#include "Game.h"
 #include <iostream>
+#include "Game.h"
 
 Game::Game(){
   ///init game vars
@@ -8,54 +8,73 @@ Game::Game(){
   if(!font.loadFromFile("fonts/sansation.ttf"))
     return;
 
-  //temp play button
-  __play.setFont(font);
-  __play.setCharacterSize(30);
-  __play.setPosition(360.f, 210.f);
-  __play.setColor(sf::Color::Black);
-  __play.setString("PLAY");
+  //gold display
+  playergold.setFont(font);
+  playergold.setCharacterSize(30);
+  playergold.setPosition(500.f, 20.f);
 
   //set background
-  setSprite(bg, "image/background.png");
+  bg.setImage("image/background.png");
 
   //start screen bg
-  setSprite(bgstartscreen, "image/startscreen.png");
-
-  //grid
-  grid.setGrid(WINDOW_X, WINDOW_Y);
-
-  //play button
-  if(!image.loadFromFile("image/play.png"))
-    return;
-  texture.loadFromImage(image);
-  playbtn.setTexture(texture);
-  playbtn.setPosition(140.f, 200.f);
+  bgstartscreen.setImage("image/startscreen.png");
 
   //title sprite
-  titlesprite.setTexture(texture);
+  titlesprite.setSprite("image/play.png");
   titlesprite.setPosition(780.f, 385.f);
-  titlesprite.source.x=0;
-  titlesprite.source.y=0;
-
-  ///set rectangle window
-  //title sprite
-  titlesprite.setTextureRect(sf::IntRect(titlesprite.source.x*SPRITE_SIZE[width], titlesprite.source.y*SPRITE_SIZE[height], SPRITE_SIZE[width], SPRITE_SIZE[height]));
+  titlesprite.set_source(0, 0);
 
   //for animation
   framecounter=0;
-  keyframe=100;
+  keyframe=70;
   framespeed=500;
+  creepspawndelay=0;
 
+  //play button
+  playbutton.setSprite("image/playbutton.png");
+  playbutton.setPosition(338.f, 210.f);
+  playbutton.setTextureRect(sf::IntRect(0, 0, 140, 80));
+
+  //portal
+  portal.setSprite("image/Portal.png");
+  portal.setPosition(12*SPRITE_SIZE[width], 2*SPRITE_SIZE[height]); //set position to correct place
+
+  towers.add_tower(normal);
+  buildmode=true;
 }
 
 void Game::update(){
   //update vars for animation
 
+  //count frame
   framecounter+=framespeed*clock.restart().asSeconds();
+
+
+  //for smooth motion
+  if(playing && framecounter>=50){
+    unsigned int i=0;
+    while(i<wave.size())
+      wave.at(i++).move(1, 0);
+  }
+
   if(framecounter>=keyframe){
     framecounter=0;
-
     updateSprites(titlesprite, 4);
+
+    //spawn creeps only when playing or game started
+    if(playing){
+      creepspawndelay++;
+      if(creepspawndelay==7){
+        creepspawndelay=0;
+        wave.spawn_creep();
+      }
+      player.gain_gold(wave.creep_sanity_check());  //checks creeps if dead or alive and gives player gold on kill
+    }
+
+    unsigned int i=0;
+    while(i<wave.size()){
+      updateSprites(wave.at(i++), 4);
+    }
   }
 }
 
@@ -80,19 +99,13 @@ bool Game::readEvents(){
   ///reads events, returns false if program is exited
   sf::Event event;
   while(window.pollEvent(event)){
+    sf::Vector2i mousecoords=sf::Mouse::getPosition(window);  //store mouse coordinates
 
     //close event
     if(event.type==sf::Event::Closed){
       playing=false;
       return false;  //exit game loop
     }
-
-    //start game event
-    if(event.type==sf::Event::KeyPressed && event.key.code==sf::Keyboard::Space)
-      playing=true;
-    //pause event
-    if(event.type==sf::Event::MouseLeft)
-      playing=false;
 
     /*
     if(event.type==sf::Event::MouseMoved &&
@@ -104,12 +117,14 @@ bool Game::readEvents(){
     */
 
     //play button
-    sf::Vector2i mousecoords=sf::Mouse::getPosition(window);
-    if(event.type==sf::Event::MouseButtonPressed &&
-       ((mousecoords.x>338 && mousecoords.x<530) &&
-        (mousecoords.y>210 && mousecoords.y<240)) &&
-       !playing)
-      playing=true;
+    if(((mousecoords.x>352 && mousecoords.x<474) && (mousecoords.y>238 && mousecoords.y<290)) && !playing){
+      if(event.type==sf::Event::MouseButtonPressed)
+        playing=true;
+    }
+
+    //start wave
+
+
 
     std::cout<<std::endl<<"X: "<<sf::Mouse::getPosition(window).x<<" "<<"Y: "<<sf::Mouse::getPosition(window).y;
     //std::cout<<std::endl<<
@@ -125,18 +140,23 @@ void Game::display(){
     window.draw(bg);
 
     //draw grid
-    for(int i=0; i<WINDOW_X/SPRITE_SIZE[width]; i++){
-      for(int j=0; j<WINDOW_Y/SPRITE_SIZE[height]; j++)
-        window.draw(grid.grid[i][j]);
-    }
+    if(buildmode)
+      window.draw(grid);
+
+    window.draw(wave);
+    window.draw(portal);
+    window.draw(playergold);
+    //window.draw(towers[0].rangecircle);
+    //window.draw(towers[0]);
 
   }
   else{
     window.draw(bgstartscreen);
 
-    //draw test
+    //draw bottom corner sprite
     window.draw(titlesprite);
-    window.draw(__play);
+    //draw play button
+    window.draw(playbutton);
 
   }
   window.display();
@@ -147,23 +167,6 @@ void Game::updateSprites(mySprite &sprite, int end_){
   sprite.source.x++;
   if(sprite.source.x*SPRITE_SIZE[width]>=SPRITE_SIZE[width]*end_)
     sprite.source.x=0;
-  sprite.setTextureRect(sf::IntRect(titlesprite.source.x*SPRITE_SIZE[width], titlesprite.source.y*SPRITE_SIZE[height],
+  sprite.setTextureRect(sf::IntRect(sprite.source.x*SPRITE_SIZE[width], sprite.source.y*SPRITE_SIZE[height],
                             SPRITE_SIZE[width], SPRITE_SIZE[height]));
-}
-
-void Game::setSprite(sf::Sprite &sprite, char *filename){
-  sf::Image image;
-  sf::Texture *texture=new sf::Texture;
-  if(!image.loadFromFile(filename))
-    throw "Can not read file.";
-  texture->loadFromImage(image);
-  sprite.setTexture(*texture);
-  allocatedtextures.push_back(texture);
-}
-
-Game::~Game(){
-  while(allocatedtextures.size()){
-    delete allocatedtextures[0];
-    allocatedtextures.erase(allocatedtextures.begin());
-  }
 }
